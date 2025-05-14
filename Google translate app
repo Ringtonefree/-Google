@@ -1,0 +1,37 @@
+<textarea id="text" placeholder="এখানে লিখুন..." style="width:100%;height:120px;"></textarea>
+<select id="voiceSelect" style="width:100%;margin-top:10px;"></select>
+<button onclick="speakText()" style="width:100%;margin-top:10px;">Speak</button>
+<button onclick="downloadNotice()" style="width:100%;margin-top:10px;">Download</button>
+
+<script>
+  const textInput = document.getElementById("text");
+  const voiceSelect = document.getElementById("voiceSelect");
+
+  function populateVoices() {
+    const voices = speechSynthesis.getVoices();
+    voiceSelect.innerHTML = "";
+    voices.forEach((voice, i) => {
+      const option = document.createElement("option");
+      option.value = i;
+      option.textContent = `${voice.name} (${voice.lang})`;
+      voiceSelect.appendChild(option);
+    });
+  }
+
+  speechSynthesis.onvoiceschanged = populateVoices;
+
+  function speakText() {
+    const text = textInput.value;
+    const utterance = new SpeechSynthesisUtterance(text);
+    const voices = speechSynthesis.getVoices();
+    utterance.voice = voices[voiceSelect.value];
+    speechSynthesis.speak(utterance);
+  }
+
+  function downloadNotice() {
+    alert("দুঃখিত! Download ফিচারটি Blogger-এ কাজ করে না। আপনি ডেস্কটপ অ্যাপে এটি ব্যবহার করতে পারবেন বা নিচে হোস্টেড টুলে গিয়ে ভয়েস ডাউনলোড করুন।");
+    // window.open("https://example.com/download-tool", "_blank"); // এখানে আপনি চাইলে আপনার হোস্টেড টুলের লিংক দিতে পারেন
+  }
+
+  window.onload = populateVoices;
+</script>
